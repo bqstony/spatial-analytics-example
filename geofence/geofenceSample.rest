@@ -1,0 +1,39 @@
+# This file requires the VS CODE Extension `REST Client` from https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+# See the documentation how to configure
+@PRIMARYKEY = AZUREMAPPRIMARYKEY
+
+
+###
+# Upload fence from geojson file
+# see: https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload?tabs=HTTP
+# @name uploadFile
+POST https://eu.atlas.microsoft.com/mapData?subscription-key={{PRIMARYKEY}}&api-version=2.0&dataFormat=geojson
+Content-Type: application/json
+
+< ./geofence.geojson
+
+###
+# Get Resource from uploaded geojson operation
+# @name getResource
+
+GET {{uploadFile.response.headers.Operation-Location}}&subscription-key={{PRIMARYKEY}}
+
+###
+# Get udid of the upladed data for spatial operations
+# @name getUdid
+
+GET {{getResource.response.headers.Resource-Location}}&subscription-key={{PRIMARYKEY}}
+
+###
+# Get the uploaded geojson content from uploadFile
+# @name getLocation
+
+GET {{getUdid.response.body.location}}&subscription-key={{PRIMARYKEY}}
+
+###
+# Spatial Operation: Evaluate Point In Polygon
+# see: https://docs.microsoft.com/en-us/rest/api/maps/spatial/evaluate-point-in-polygon?tabs=HTTP
+# @name getIsPointInPolygon
+@lat = 47.63810783315048
+@lon = -122.13336020708084
+GET https://eu.atlas.microsoft.com/spatial/pointInPolygon/json?api-version=1.0&udid={{getUdid.response.body.udid}}&lat={{lat}}&lon={{lon}}&subscription-key={{PRIMARYKEY}}
