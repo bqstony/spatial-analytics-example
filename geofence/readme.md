@@ -2,11 +2,14 @@
 
 ## Tools
 
+- [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
 - [geojson.io](https://geojson.io)
 - [VS Code]()
   - [Extension: REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client)
 
 ## Deploy az 
+
+Execute the following bash commands:
 
 ```bash
 # create Ressource Group
@@ -15,11 +18,13 @@ az group create --name spatial-geofence-dev-rg --location switzerlandnorth
 # Create Azure Maps accounts (Geofence API requireses region=Global)
 az maps account create --account-name spatial-geofence-dev-am --resource-group spatial-geofence-dev-rg --kind Gen2 --sku G2 --accept-tos
 
-# Get the SAS authentication KEY
-PRIMARYKEY=$(az maps account keys list --account-name spatial-geofence-dev-am --resource-group spatial-geofence-dev-rg --output tsv --query primaryKey) | echo $PRIMARYKEY
+# Get the Azure Maps secrets
+PRIMARYKEY=$(az maps account keys list --account-name spatial-geofence-dev-am --resource-group spatial-geofence-dev-rg --output tsv --query "primaryKey") && \
+CLIENTID=$(az maps account show --account-name spatial-geofence-dev-am --resource-group spatial-geofence-dev-rg --output tsv --query properties.uniqueId) && \
+echo "ClientId=$CLIENTID SasKey=$PRIMARYKEY"
 
-# Update the .rest file with the Azure Map key
-sed -i "s/AZUREMAPPRIMARYKEY/$PRIMARYKEY/" geofenceSample.rest
+# Update the .rest file with the Azure Map secrets
+sed -i "s/AZUREMAPPRIMARYKEY/$PRIMARYKEY/;s/AZUREMAPCLIENTID/$CLIENTID/" geofenceSample.rest
 ```
 
 ## Play with the example
@@ -34,7 +39,7 @@ The file [geofenceSample.rest](geofenceSample.rest) with the VS Code Extension [
 
 ```bash
 # Delete resource groups
-az group delete --yes --no-wait --name cloudinit-simple-dev-rg
+az group delete --yes --no-wait --name spatial-geofence-dev-rg
 ```
 
 
@@ -44,5 +49,3 @@ az group delete --yes --no-wait --name cloudinit-simple-dev-rg
 - [Azure Maps - Data V2 - Upload](https://docs.microsoft.com/en-us/rest/api/maps/data-v2/upload?tabs=HTTP)
 - [Azure Maps - Spatial Geofence](https://docs.microsoft.com/en-us/rest/api/maps/spatial/get-geofence?tabs=HTTP)
 - [Azure Maps - Pricing](https://azure.microsoft.com/de-de/pricing/details/azure-maps/)
-- [Event Grid - Logic Apps](https://docs.microsoft.com/en-us/azure/event-grid/handler-webhooks#logic-apps)
-- [Event Grid](https://docs.microsoft.com/en-us/azure/event-grid/overview)

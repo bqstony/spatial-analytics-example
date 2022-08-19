@@ -1,7 +1,7 @@
 # This file requires the VS CODE Extension `REST Client` from https://marketplace.visualstudio.com/items?itemName=humao.rest-client
 # See the documentation how to configure
 @PRIMARYKEY = AZUREMAPPRIMARYKEY
-
+@CLIENTID = AZUREMAPCLIENTID
 
 ###
 # Upload fence from geojson file
@@ -9,6 +9,7 @@
 # @name uploadFile
 POST https://eu.atlas.microsoft.com/mapData?subscription-key={{PRIMARYKEY}}&api-version=2.0&dataFormat=geojson
 Content-Type: application/json
+x-ms-client-id: @CLIENTID
 
 < ./geofence.geojson
 
@@ -17,18 +18,21 @@ Content-Type: application/json
 # @name getResource
 
 GET {{uploadFile.response.headers.Operation-Location}}&subscription-key={{PRIMARYKEY}}
+x-ms-client-id: @CLIENTID
 
 ###
 # Get udid of the upladed data for spatial operations
 # @name getUdid
 
 GET {{getResource.response.headers.Resource-Location}}&subscription-key={{PRIMARYKEY}}
+x-ms-client-id: @CLIENTID
 
 ###
 # Get the uploaded geojson content from uploadFile
 # @name getLocation
 
 GET {{getUdid.response.body.location}}&subscription-key={{PRIMARYKEY}}
+x-ms-client-id: @CLIENTID
 
 ###
 # Spatial Operation: Evaluate Point In Polygon
@@ -37,3 +41,38 @@ GET {{getUdid.response.body.location}}&subscription-key={{PRIMARYKEY}}
 @lat = 47.63810783315048
 @lon = -122.13336020708084
 GET https://eu.atlas.microsoft.com/spatial/pointInPolygon/json?api-version=1.0&udid={{getUdid.response.body.udid}}&lat={{lat}}&lon={{lon}}&subscription-key={{PRIMARYKEY}}
+x-ms-client-id: @CLIENTID
+
+###
+# Spatial Operation: Get Geofence
+# If Parameter isAsync = True and events are registred in Azure Maps Accont, then events are rised depend on the mode parameter value like EnterAndExit
+# The response will contain information about the distance from the outer edge of the geofence. A negative value signifies that the coordinate is inside of the fence while a positive value means that it is outside of the fence.
+# see: https://docs.microsoft.com/en-us/rest/api/maps/spatial/get-geofence?tabs=HTTP
+# @name getGeofence
+
+# ID of the device that will be tracket (imporend for events identification)
+@deviceId = supermario
+# The unique id returned from Data Upload API after uploading a valid GeoJSON FeatureCollection object.
+@udid = {{getUdid.response.body.udid}}
+@lat = 47.63810783315048
+@lon = -122.13336020708084
+# The radius of the buffer around the geofence in meters that defines how far to search inside and outside the border of the fence against the coordinate that was provided when calculating the result. The minimum value is 0, and the maximum is 500. The default value is 50.
+@searchBuffer = 20
+# If true, the request will use async event mechanism; if false, the request will be synchronized and do not trigger any event. The default value is false.
+@isAsync = false
+# Mode of the geofencing async event mechanism.
+@mode = EnterAndExit
+GET https://eu.atlas.microsoft.com/spatial/geofence/json?api-version=1.0&deviceId={{deviceId}}&udid={{udid}}&lat={{lat}}&lon={{lon}}&searchBuffer={{searchBuffer}}&isAsync={{isAsync}}&mode={{mode}}&subscription-key={{PRIMARYKEY}}
+x-ms-client-id: @CLIENTID
+
+###
+# Spatial Operation: Get Buffer
+# see: https://docs.microsoft.com/en-us/rest/api/maps/spatial/get-buffer?tabs=HTTP
+# @name getBufferGeojson
+
+# The unique id returned from Data Upload API after uploading a valid GeoJSON FeatureCollection object.
+@udid = {{getUdid.response.body.udid}}
+# The list of distances (one per feature or one for all features), delimited by semicolons. For example, 12.34;-56.78. Positive distance will generate a buffer outside of the feature, whereas negative distance will generate a buffer inside of the feature. If the negative distance larger than the geometry itself, an empty polygon will be returned.
+@distances = 20
+GET https://eu.atlas.microsoft.com/spatial/buffer/json?api-version=2022-08-01&udid={{udid}}&distances={{distances}}&subscription-key={{PRIMARYKEY}}
+x-ms-client-id: @CLIENTID

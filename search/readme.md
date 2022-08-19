@@ -1,6 +1,12 @@
 # Example of search web app by using Azure Maps
 
+## Tools
+
+- [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
+
 ## Deploy az
+
+Execute the following bash commands:
 
 ```bash
 # create Ressource Group
@@ -17,7 +23,11 @@ Replace your account informations in the `interactive-search.html` file at the a
 Otherwise use this bash script lines:
 
 ```bash
-PRIMARYKEY=$(az maps account keys list --account-name spatial-geofence-dev-am --resource-group spatial-geofence-dev-rg --output tsv --query primaryKey)
-CLIENTID=$(az maps account show --account-name spatial-geofence-dev-am --resource-group spatial-geofence-dev-rg --output tsv --query properties.uniqueId)
+# Get the Azure Maps secrets
+PRIMARYKEY=$(az maps account keys list --account-name spatial-geofence-dev-am --resource-group spatial-geofence-dev-rg --output tsv --query "primaryKey") && \
+CLIENTID=$(az maps account show --account-name spatial-geofence-dev-am --resource-group spatial-geofence-dev-rg --output tsv --query properties.uniqueId) && \
+echo "ClientId=$CLIENTID SasKey=$PRIMARYKEY"
+
+# Update the .html sample with the secretes
 sed -i "s/CLIENT_ID/$CLIENTID/;s/SAS_PRIMARY_KEY/$PRIMARYKEY/" interactive-search.html
 ```
