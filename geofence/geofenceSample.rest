@@ -14,7 +14,8 @@ x-ms-client-id: @CLIENTID
 < ./geofence.geojson
 
 ###
-# Get Resource from uploaded geojson operation
+# Get Resource from uploaded geojson operation. 
+# Sometime it takes longer. The Status in the response must be "Succeeded"
 # @name getResource
 
 GET {{uploadFile.response.headers.Operation-Location}}&subscription-key={{PRIMARYKEY}}

@@ -1,25 +1,33 @@
 # spatial-analytics-example
 
-Shows a example of spatial analytics by using Azure Maps
+Dis Repository shows how to handle with Azure Maps to get first expirence with the SDK.
 
-> Be aware of the unique azure names. Best is to replace all folloing names with your unique one: spatial-geofence-dev-am, spatial-geofence-dev-rg
+Examples:
+- A simple local web app written in javascript to demonstrate the interactive search experience. See the [search readme.md](/search/readme.md)
+- A examples thats use the REST api for spatial analytics. See the [geofence readme.md](/geofence/readme.md)
 
-# docs & tutorials 4 Azure Maps
+> Be aware of the unique azure names. Best is to replace all following names with your unique one: spatial-geofence-dev-am, spatial-geofence-dev-rg
 
-- [Blog: Announcing Mobility service for Azure Maps, SDKs updates, and more](https://azure.microsoft.com/en-us/blog/announcing-mobility-service-for-azure-maps-sdks-updates-and-more/)
-- [Tutorial: Implement IoT spatial analytics by using Azure Maps](https://docs.microsoft.com/en-us/azure/azure-maps/tutorial-iot-hub-maps)
-- [REST API Spatial](https://docs.microsoft.com/en-us/rest/api/maps/spatial)
-- [Video: How to use routing and Directions APIs with Azure Maps](https://www.youtube.com/watch?v=wIqSeTtdnDU)
+# docs
+
+Some kickstart Background information about Azure Maps
+
+- [Azure Maps marketing information](https://azure.microsoft.com/en-us/services/azure-maps/)
+- [Azure Maps docs](https://docs.microsoft.com/en-us/azure/azure-maps/about-azure-maps)
+- [Azure Maps - Pricing](https://azure.microsoft.com/en-us/pricing/details/azure-maps/)
 
 # az cheat sheet
 
 ```bash
+# Interactive Login / set default subscription / logout
+az login
+az account set --subscription "your-subscription"
+az logout --username "your-email"
+
 # list locations
 az account list-locations -o table
 
-# Login / set default subscription / logout
-az login
-az account set --subscription "tenantid"
-az logout --username "your-email"
+# Azure Maps commands help
+az maps --help
 ```
 
