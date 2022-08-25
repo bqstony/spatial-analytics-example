@@ -39,9 +39,9 @@ x-ms-client-id: @CLIENTID
 # Spatial Operation: Evaluate Point In Polygon
 # see: https://docs.microsoft.com/en-us/rest/api/maps/spatial/evaluate-point-in-polygon?tabs=HTTP
 # @name getIsPointInPolygon
-@lat = 47.63810783315048
-@lon = -122.13336020708084
-GET https://eu.atlas.microsoft.com/spatial/pointInPolygon/json?api-version=1.0&udid={{getUdid.response.body.udid}}&lat={{lat}}&lon={{lon}}&subscription-key={{PRIMARYKEY}}
+@lat1 = 47.63810783315048
+@lon1 = -122.13336020708084
+GET https://eu.atlas.microsoft.com/spatial/pointInPolygon/json?api-version=1.0&udid={{getUdid.response.body.udid}}&lat={{lat1}}&lon={{lon1}}&subscription-key={{PRIMARYKEY}}
 x-ms-client-id: @CLIENTID
 
 ###
@@ -55,15 +55,15 @@ x-ms-client-id: @CLIENTID
 @deviceId = supermario
 # The unique id returned from Data Upload API after uploading a valid GeoJSON FeatureCollection object.
 @udid = {{getUdid.response.body.udid}}
-@lat = 47.63810783315048
-@lon = -122.13336020708084
+@lat2 = 47.63810783315048
+@lon2 = -122.13336020708084
 # The radius of the buffer around the geofence in meters that defines how far to search inside and outside the border of the fence against the coordinate that was provided when calculating the result. The minimum value is 0, and the maximum is 500. The default value is 50.
 @searchBuffer = 20
 # If true, the request will use async event mechanism; if false, the request will be synchronized and do not trigger any event. The default value is false.
 @isAsync = false
 # Mode of the geofencing async event mechanism.
 @mode = EnterAndExit
-GET https://eu.atlas.microsoft.com/spatial/geofence/json?api-version=1.0&deviceId={{deviceId}}&udid={{udid}}&lat={{lat}}&lon={{lon}}&searchBuffer={{searchBuffer}}&isAsync={{isAsync}}&mode={{mode}}&subscription-key={{PRIMARYKEY}}
+GET https://eu.atlas.microsoft.com/spatial/geofence/json?api-version=1.0&deviceId={{deviceId}}&udid={{udid}}&lat={{lat2}}&lon={{lon2}}&searchBuffer={{searchBuffer}}&isAsync={{isAsync}}&mode={{mode}}&subscription-key={{PRIMARYKEY}}
 x-ms-client-id: @CLIENTID
 
 ###
